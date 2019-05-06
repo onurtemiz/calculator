@@ -31,14 +31,14 @@ button:hover {
 }
 
 .operator {
-  background-color: #dd3cdd;
+  background-color: #9317a3;
   transition-duration: 0.4s;
 }
 
 .operator:hover {
   background-color: white;
   color: black;
-  border: 2px solid #dd3cdd;
+  border: 2px solid #9317a3;
 }
 
 .number {
