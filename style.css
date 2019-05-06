@@ -12,11 +12,16 @@ body {
 
 button {
   font-size: 20px;
-  border: 2px solid black;
+  border: 1px solid white;
   background-color: #008cba;
   color: white;
   font-weight: bold;
   transition-duration: 0.4s;
+}
+
+button,
+div {
+  border-radius: 50px;
 }
 
 button:hover {
@@ -51,22 +56,23 @@ button:hover {
   grid-row: 2 / span 1;
   grid-column: 1 / span 4;
   text-align: right;
-  border: 2px solid black;
+  border: 1px solid white;
   font-size: 20px;
-  border: 2px solid black;
   background-color: #008cba;
   color: white;
   font-weight: bold;
+  padding-right: 20px;
 }
 
 #result {
   grid-row: 1 / span 1;
   grid-column: 1 / span 4;
   font-size: 20px;
-  border: 2px solid black;
+  border: 1px solid white;
   font-size: 25px;
   text-align: right;
   background-color: #e7e7e7;
+  padding-right: 20px;
 }
 #clear {
   grid-row: 3 / span 1;
