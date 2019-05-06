@@ -2,23 +2,111 @@ const numbers = document.querySelectorAll(".number");
 const operators = document.querySelectorAll(".operator");
 const clearButton = document.querySelector("#clear");
 const equalButton = document.querySelector("#equal");
+const operations = document.querySelector("#operations");
+const result = document.querySelector("#result");
+const backspace = document.querySelector("#backspace");
 
 let onlyOne = ["+", "*", "/", "-", "."];
+let start = 0;
+
+document.onkeypress = function(e) {
+  e = e || window.event;
+  console.log(e.keyCode);
+  switch (e.keyCode) {
+    case 48:
+      keyboardNum("0");
+      break;
+    case 49:
+      keyboardNum("1");
+      break;
+    case 50:
+      keyboardNum("2");
+      break;
+    case 51:
+      keyboardNum("3");
+      break;
+    case 52:
+      keyboardNum("4");
+      break;
+    case 53:
+      keyboardNum("5");
+      break;
+    case 54:
+      keyboardNum("6");
+      break;
+    case 55:
+      keyboardNum("7");
+      break;
+    case 56:
+      keyboardNum("8");
+      break;
+    case 57:
+      keyboardNum("9");
+      break;
+    case 43:
+      keyboardOpe("+");
+      break;
+    case 45:
+      keyboardOpe("-");
+      break;
+    case 42:
+      keyboardOpe("*");
+      break;
+    case 47:
+      keyboardOpe("/");
+      break;
+    case 46:
+      keyboardOpe(".");
+      break;
+    case 99:
+      result.textContent = 0;
+      operations.textContent = "-";
+      break;
+    case 61:
+      operate();
+      break;
+    case 13:
+      operate();
+      break;
+    case 8:
+      removeLast(result);
+      break;
+  }
+};
+
+function keyboardNum(n) {
+  if (result.textContent == 0 || start == 1) {
+    result.textContent = n;
+    start = 0;
+  } else {
+    result.textContent += n;
+  }
+}
 
 numbers.forEach(function(number) {
   number.addEventListener("mouseup", function() {
-    const result = document.querySelector("#result");
-    if (result.textContent == 0) {
+    if (result.textContent == 0 || start == 1) {
       result.textContent = number.textContent;
+      start = 0;
     } else {
       result.textContent += number.textContent;
     }
   });
 });
 
+function keyboardOpe(ope) {
+  if (
+    result.textContent == 0 ||
+    onlyOne.includes(result.textContent[result.textContent.length - 1])
+  ) {
+    return;
+  } else {
+    result.textContent += ope;
+  }
+}
+
 operators.forEach(function(operator) {
   operator.addEventListener("mouseup", function() {
-    const result = document.querySelector("#result");
     if (
       result.textContent == 0 ||
       onlyOne.includes(result.textContent[result.textContent.length - 1])
@@ -31,16 +119,34 @@ operators.forEach(function(operator) {
 });
 
 clearButton.addEventListener("mouseup", function() {
-  const result = document.querySelector("#result");
   result.textContent = 0;
+  operations.textContent = "-";
 });
 
 equalButton.addEventListener("mouseup", function() {
-  const result = document.querySelector("#result");
-  let toParse = result.textContent;
+  operate();
+});
 
+backspace.addEventListener("mouseup", function() {
+  result.textContent = removeLast(result.textContent);
+});
+
+function removeLast(result) {
+  let text = result;
+  if (text.length > 2) {
+    return text.slice(0, text.length - 2);
+  } else {
+    return 0;
+  }
+}
+
+function operate() {
+  let toParse = result.textContent;
   let arr = [];
   let numArr = [];
+  if (onlyOne.includes(toParse[toParse.length - 1])) {
+    toParse = toParse.slice(0, toParse.length - 1);
+  }
   for (let i = 0; i < toParse.length; i++) {
     if (!isNaN(toParse[i]) || toParse[i] == ".") {
       numArr.push(toParse[i]);
@@ -68,8 +174,6 @@ equalButton.addEventListener("mouseup", function() {
 
   let dominantOperatorIndexes = findOperations(arr)[0];
   let normalOperatorIndexes = findOperations(arr)[1];
-
-  //console.log(arr);
 
   while (dominantOperatorIndexes.length > 0) {
     let num1 = arr[dominantOperatorIndexes[0] - 1];
@@ -105,10 +209,11 @@ equalButton.addEventListener("mouseup", function() {
     dominantOperatorIndexes = findOperations(arr)[0];
     normalOperatorIndexes = findOperations(arr)[1];
   }
-  const operations = document.querySelector("#operations");
-  operations.textContent = result.textContent;
-  result.textContent = arr[0];
-});
+  operations.textContent = toParse;
+
+  result.textContent = Math.round(arr[0] * 100) / 100;
+  start = 1;
+}
 
 function operator(num1, num2, ope) {
   if (ope == "+") {
